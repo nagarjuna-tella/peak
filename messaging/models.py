@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 
 class Group(models.Model):
     name = models.CharField(max_length=100)
-    members = models.ManyToManyField(User, related_name='groups')
+    members = models.ManyToManyField(User, related_name='user_groups')
 
 class Message(models.Model):
     author = models.ForeignKey(User, related_name='messages', on_delete=models.CASCADE)

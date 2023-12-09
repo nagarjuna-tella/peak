@@ -7,6 +7,11 @@ from rest_framework.authtoken.models import Token
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from rest_framework.permissions import AllowAny
+from rest_framework import viewsets
+from .models import Group, Message
+from .serializers import *
+from django.contrib.auth.models import User
+from rest_framework.decorators import api_view
 
 
 @method_decorator(csrf_exempt, name='dispatch')
@@ -30,3 +35,22 @@ class UserLoginAPIView(APIView):
             token, created = Token.objects.get_or_create(user=user)
             return Response({'token': token.key})
         return Response({'error': 'Invalid Credentials'}, status=status.HTTP_400_BAD_REQUEST)
+    
+class GroupViewSet(viewsets.ModelViewSet):
+    queryset = Group.objects.all()
+    serializer_class = GroupSerializer
+    permission_classes = (AllowAny,)
+
+class MessageViewSet(viewsets.ModelViewSet):
+    queryset = Message.objects.all()
+    serializer_class = MessageSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
+        
+@api_view(['GET'])
+def user_search(request):
+    query = request.GET.get('query', '')
+    users = User.objects.filter(username__icontains=query)
+    serializer = UserSerializer(users, many=True)
+    return Response(serializer.data)
