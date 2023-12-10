@@ -1,4 +1,5 @@
 from django.db import models
+from config.models import *
 from django.contrib.auth.models import User
 
 class Group(models.Model):

@@ -19,12 +19,15 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from messaging.views import *
+from config.views import *
 from rest_framework.routers import DefaultRouter
 
 
 router = DefaultRouter()
 router.register(r'groups', GroupViewSet)
 router.register(r'messages', MessageViewSet)
+router.register(r'tasks', TaskViewSet)
+router.register(r'applications', ApplicationViewSet)
 
 
 urlpatterns = [
