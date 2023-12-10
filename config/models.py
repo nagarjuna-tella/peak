@@ -12,8 +12,8 @@ class Application(models.Model):
     
 class Task(models.Model):
     user = models.ForeignKey(User, related_name='tasks', on_delete=models.CASCADE, null=True)
-    name = models.CharField(max_length=255)
-    task_description = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, null=True)
+    task_description = models.CharField(max_length=255, null=True)
     application = models.ForeignKey(Application, related_name='tasks', on_delete=models.CASCADE)
     STATUS_CHOICES = [
         ('Pipeline', 'Pipeline'),

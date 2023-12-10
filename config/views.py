@@ -10,6 +10,7 @@ from django.utils.decorators import method_decorator
 from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.response import Response
+from rest_framework import generics
 
 # Create your views here.
 
@@ -22,6 +23,25 @@ class TaskViewSet(viewsets.ModelViewSet):
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
     permission_classes = (AllowAny,)
+    
+    def list(self, request, *args, **kwargs):
+        
+        tasks = Task.objects.all()
+        
+        resp = []
+        for task in tasks:
+            item = {
+                'id':task.id,
+                'name':task.name,
+                'user':task.user.username,
+                'application_id':task.application.name,
+                'status':task.status,
+                'deadline':task.deadline
+            }
+            
+            resp.append(item)
+        
+        return Response(resp)
     
 @method_decorator(csrf_exempt, name='dispatch')
 class UserRegistrationAPIView(APIView):
@@ -44,3 +64,8 @@ class UserLoginAPIView(APIView):
             token, created = Token.objects.get_or_create(user=user)
             return Response({'token': token.key})
         return Response({'error': 'Invalid Credentials'}, status=status.HTTP_400_BAD_REQUEST)
+    
+class UserList(generics.ListAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = (AllowAny,)

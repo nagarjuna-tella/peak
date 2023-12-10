@@ -35,5 +35,6 @@ urlpatterns = [
     path('register/', UserRegistrationAPIView.as_view(), name='register'),
     path('login/', UserLoginAPIView.as_view(), name='login'),
     path('api/users/search/', user_search, name='user_search'),
+    path('api/users/', UserList.as_view(), name='user-list'),
     path('api/', include(router.urls)),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
